@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 // 게임 오버 상태를 표현하고, 게임 점수와 UI를 관리하는 게임 매니저
 // 씬에는 단 하나의 게임 매니저만 존재할 수 있다.
 public class GameManager : MonoBehaviour {
@@ -14,6 +15,9 @@ public class GameManager : MonoBehaviour {
 
     private int score = 0; // 게임 점수
     private int hpscore = 3; // hp 개수
+
+    public Button menuButton, Continue, reTry, Exit;
+    public GameObject menuPanel;
 
     // 게임 시작과 동시에 싱글톤을 구성
     void Awake() {
@@ -34,7 +38,13 @@ public class GameManager : MonoBehaviour {
         }
     }
     private void Start() {
+        // hp 개수표시, 메뉴패널 비활성화, 버튼 AddListener 함수사용
         lifeText.text = hpscore.ToString();
+        menuPanel.SetActive(false);
+        menuButton.onClick.AddListener(callMenu);
+        Continue.onClick.AddListener(callCon);
+        reTry.onClick.AddListener(callRe);
+        Exit.onClick.AddListener(callExit);
     }
 
     void Update() {
@@ -70,5 +80,28 @@ public class GameManager : MonoBehaviour {
             lifeText.text = "= " + hpscore;
         if ( hpscore > 0 )return true;
         return false;
+    }
+    // 메뉴 불러오기
+    public void callMenu() {
+        Time.timeScale = 0;
+        menuPanel.SetActive(true);
+    }
+    // 계속하기
+    public void callCon() {
+        Time.timeScale = 1;
+        menuPanel.SetActive(false);
+    }
+    // 다시시작
+    public void callRe() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1;
+    }
+    public void callExit() {
+    // #if else로 유니티 종료
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

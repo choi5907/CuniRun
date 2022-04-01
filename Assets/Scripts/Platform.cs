@@ -39,5 +39,4 @@ public class Platform : MonoBehaviour {
             // AddScore에 싱글턴으로 접근하여 1점 추가
         }
     }
-
 }
